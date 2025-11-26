@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Formularza Ofertowego - dla Handlowców</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: #667eea;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .products-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+            position: relative;
+        }
+
+        .product-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .product-number {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .remove-product {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .remove-product:hover {
+            background: #e84118;
+            transform: translateY(-2px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-product-btn {
+            background: #2ecc71;
+            color: white !important;
+            width: 100%;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .add-product-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            color: white !important;
+        }
+        
+        .add-product-btn:active {
+            background: #27ae60;
+            transform: scale(0.98);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+            justify-content: center;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .clear-btn {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .required {
+            color: #ff4757;
+        }
+
+        /* Style dla urządzeń mobilnych */
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-content {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+
+            /* Większe przyciski na mobile */
+            .add-product-btn {
+                padding: 18px 20px;
+                font-size: 18px;
+                min-height: 60px;
+                line-height: 24px;
+                -webkit-tap-highlight-color: rgba(46, 204, 113, 0.3);
+                touch-action: manipulation;
+            }
+            
+            .add-product-btn:active {
+                background: #27ae60 !important;
+                transform: scale(0.98);
+            }
+
+            .generate-btn, .clear-btn {
+                padding: 16px 15px;
+                font-size: 14px;
+                min-height: 54px;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            
+            .generate-btn:active {
+                transform: scale(0.98);
+            }
+
+            .remove-product {
+                padding: 12px 18px;
+                font-size: 14px;
+                min-height: 44px;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            /* Większe selecty i inputy na mobile */
+            input, textarea, select {
+                font-size: 16px !important; /* Zapobiega zoom na iOS */
+                padding: 14px 12px;
+                min-height: 48px;
+            }
+
+            /* Większe checkboxy */
+            input[type="checkbox"] {
+                width: 24px !important;
+                height: 24px !important;
+                min-height: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            label {
+                font-size: 15px;
+            }
+            
+            /* Opcje finansowania w jednej kolumnie na mobile */
+            .form-group > div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Dodatkowe style dla bardzo małych ekranów */
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .form-content {
+                padding: 12px;
+            }
+
+            .product-item {
+                padding: 15px;
+            }
+
+            .add-product-btn {
+                padding: 20px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Generator Formularza Ofertowego</h1>
+            <p>Wypełnij dane oferty - formularz zostanie wygenerowany w formacie JSON</p>
+        </div>
+
+        <div class="form-content">
+            <form id="offerForm">
+                <!-- DANE KLIENTA -->
+                <div class="section">
+                    <div class="section-title">👤 Dane Klienta</div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Nazwa firmy</label>
+                            <input type="text" id="clientName">
+                        </div>
+                        <div class="form-group">
+                            <label>NIP</label>
+                            <input type="text" id="clientNIP">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Adres</label>
+                            <input type="text" id="clientAddress">
+                        </div>
+                        <div class="form-group">
+                            <label>Kod pocztowy</label>
+                            <input type="text" id="clientPostalCode" placeholder="np. 00-000">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Miasto</label>
+                            <input type="text" id="clientCity">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Imię i nazwisko osoby do kontaktu <span class="required">*</span></label>
+                            <input type="text" id="clientContact" required placeholder="np. Jan Kowalski">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" id="clientEmail" required placeholder="np. jan.kowalski@firma.pl">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefon <span class="required">*</span></label>
+                            <input type="tel" id="clientPhone" required placeholder="np. +48 123 456 789">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DANE HANDLOWCA -->
+                <div class="section">
+                    <div class="section-title">👔 Dane Handlowca</div>
+                    <div class="form-group">
+                        <label>Imię <span class="required">*</span></label>
+                        <input type="text" id="salesName" required placeholder="np. Jan">
+                    </div>
+                </div>
+
+                <!-- PRODUKTY -->
+                <div class="section">
+                    <div class="section-title">🛒 Produkty w ofercie</div>
+                    <div class="products-container" id="productsContainer">
+                        <!-- Produkty będą dodawane dynamicznie -->
+                    </div>
+                    <a href="javascript:void(0);" class="add-product-btn" ontouchstart="addProduct(); return false;" onclick="addProduct(); return false;" role="button" style="display: block; text-align: center; text-decoration: none;">
+                        ➕ Dodaj produkt
+                    </a>
+                </div>
+
+                <!-- INFORMACJE DODATKOWE -->
+                <div class="section">
+                    <div class="section-title">📝 Informacje dodatkowe</div>
+                    <div class="form-group">
+                        <label>Termin dostawy (do X dni roboczych)</label>
+                        <select id="deliveryTime">
+                            <option value="">-- Wybierz --</option>
+                            <option value="3">do 3 dni</option>
+                            <option value="5">do 5 dni</option>
+                            <option value="7">do 7 dni</option>
+                            <option value="10">do 10 dni</option>
+                            <option value="14">do 14 dni</option>
+                            <option value="21">do 21 dni</option>
+                            <option value="30">do 30 dni</option>
+                            <option value="45">do 45 dni</option>
+                            <option value="60">do 60 dni</option>
+                            <option value="90">do 90 dni</option>
+                        </select>
+                    </div>
+                    
+                    <!-- OPCJE FINANSOWANIA -->
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label style="font-weight: bold; font-size: 14px; margin-bottom: 10px; display: block;">Opcje finansowania:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="paymentProforma" onchange="handlePaymentOptions()" style="width: auto; margin-right: 8px;">
+                                Płatność proforma
+                            </label>
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="paymentCash" onchange="handlePaymentOptions()" style="width: auto; margin-right: 8px;">
+                                Płatność gotówka
+                            </label>
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="leasing" onchange="handlePaymentOptions()" style="width: auto; margin-right: 8px;">
+                                Przygotować ofertę leasingu
+                            </label>
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="loan" onchange="handlePaymentOptions()" style="width: auto; margin-right: 8px;">
+                                Przygotować ofertę pożyczki
+                            </label>
+                        </div>
+                        
+                        <!-- Opcja płatność na termin -->
+                        <label style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <input type="checkbox" id="paymentTerm" onchange="handlePaymentOptions(); togglePaymentTermDays()" style="width: auto; margin-right: 8px;">
+                            Płatność na termin
+                        </label>
+                        <div id="paymentTermDaysContainer" style="display: none; margin-left: 30px; margin-bottom: 15px;">
+                            <label>Liczba dni na wpłatę:</label>
+                            <select id="paymentTermDays" style="width: 150px;">
+                                <option value="">-- Wybierz --</option>
+                                <option value="7">7 dni</option>
+                                <option value="14">14 dni</option>
+                                <option value="21">21 dni</option>
+                                <option value="30">30 dni</option>
+                                <option value="45">45 dni</option>
+                                <option value="60">60 dni</option>
+                                <option value="90">90 dni</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Informacje o finansowaniu</label>
+                        <textarea id="financing" placeholder="np. Wpłata własna: 20%, Ilość miesięcy: 36, Termin: 14 dni"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Dodatkowe uwagi</label>
+                        <textarea id="additionalNotes" placeholder="Dodatkowe informacje do oferty..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Ważność oferty</label>
+                        <select id="validityPeriod">
+                            <option value="">-- Wybierz --</option>
+                            <option value="7">7 dni</option>
+                            <option value="14">14 dni</option>
+                            <option value="21">21 dni</option>
+                            <option value="30" selected>30 dni</option>
+                            <option value="45">45 dni</option>
+                            <option value="60">60 dni</option>
+                            <option value="90">90 dni</option>
+                        </select>
+                    </div>
+                </div>
+
+                <script>
+                    // Funkcja obsługująca logikę checkboxów finansowania
+                    function handlePaymentOptions() {
+                        const proforma = document.getElementById('paymentProforma');
+                        const cash = document.getElementById('paymentCash');
+                        const term = document.getElementById('paymentTerm');
+                        const leasing = document.getElementById('leasing');
+                        const loan = document.getElementById('loan');
+                        
+                        const singleOptions = [proforma, cash, term];
+                        const dualOptions = [leasing, loan];
+                        
+                        // Sprawdź ile opcji jest zaznaczonych
+                        const singleChecked = singleOptions.filter(opt => opt.checked).length;
+                        const dualChecked = dualOptions.filter(opt => opt.checked).length;
+                        
+                        // Jeśli zaznaczono pojedynczą opcję (proforma/gotówka/termin)
+                        if (singleChecked > 0) {
+                            // Zablokuj wszystkie inne opcje pojedyncze
+                            singleOptions.forEach(opt => {
+                                if (!opt.checked) {
+                                    opt.disabled = true;
+                                    opt.parentElement.style.opacity = '0.5';
+                                }
+                            });
+                            // Zablokuj opcje dual (leasing/pożyczka)
+                            dualOptions.forEach(opt => {
+                                opt.disabled = true;
+                                opt.parentElement.style.opacity = '0.5';
+                                opt.checked = false;
+                            });
+                        }
+                        // Jeśli zaznaczono leasing lub pożyczkę
+                        else if (dualChecked > 0) {
+                            // Zablokuj opcje pojedyncze
+                            singleOptions.forEach(opt => {
+                                opt.disabled = true;
+                                opt.parentElement.style.opacity = '0.5';
+                                opt.checked = false;
+                            });
+                            // Dual options mogą być zaznaczone razem
+                        }
+                        // Jeśli nic nie jest zaznaczone - odblokuj wszystko
+                        else {
+                            [...singleOptions, ...dualOptions].forEach(opt => {
+                                opt.disabled = false;
+                                opt.parentElement.style.opacity = '1';
+                            });
+                        }
+                    }
+                    
+                    // Funkcja pokazująca/ukrywająca pole dni na wpłatę
+                    function togglePaymentTermDays() {
+                        const termCheckbox = document.getElementById('paymentTerm');
+                        const daysContainer = document.getElementById('paymentTermDaysContainer');
+                        daysContainer.style.display = termCheckbox.checked ? 'block' : 'none';
+                    }
+                </script>
+
+
+                <!-- PRZYCISKI -->
+                <div class="button-group">
+                    <button type="button" class="generate-btn" onclick="generateJSON()">
+                         💾 Pobierz JSON
+                    </button>
+                    <button type="button" class="generate-btn" onclick="generatePDF(event)" style="background: #e74c3c;">
+                         📄 Pobierz PDF
+                    </button>
+                    <button type="button" class="clear-btn" onclick="clearForm()">
+                         🗑️ Wyczyść
+                    </button>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    ✅ Formularz został wygenerowany i pobrany!
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let productCounter = 0;
+
+        // BAZA DANYCH PRODUKTÓW - Nowa struktura z JSON
+        const productsDatabase = {
+            "Columbus": {
+                "Automaty sprzątające": {
+                    "RA 35|B 10": {
+                        "code": "11 400 002",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "440 W",
+                            "Szerokość robocza": "350 mm",
+                            "Szerokość odsysania": "420 mm",
+                            "Wydajność": "1400 m²/h",
+                            "Zbiornik wody czystej": "10 l",
+                            "Zbiornik wody brudnej": "11.5 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "12 V",
+                            "Wymiary": "735 x 490 x 650 mm",
+                            "Ciężar roboczy max.": "74 kg (63 Ah 5)"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "21 027 030"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 027 031"},
+                            {"name": "Szczotka szorująca Ø350 mm Standard", "code": "21 026 603"},
+                            {"name": "Szczotka szorująca Ø350 mm Miękka", "code": "21 026 602"},
+                            {"name": "Szczotka szorująca Ø350 mm Bardzo miękka", "code": "21 026 601"},
+                            {"name": "Szczotka szorująca Ø350 mm Sica 120", "code": "21 026 700"},
+                            {"name": "Talerz nośny do padów Ø350 mm", "code": "21 026 800"}
+                        ],
+                        "batteries": [
+                            {"name": "Bateria żelowa 12V/55Ah Optima", "code": "21 042 700"},
+                            {"name": "Bateria żelowa 12V/63Ah5", "code": "21 026 900"}
+                        ]
+                    },
+                    "RA 43|B 20": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "12 564 304"},
+                            {"name": "z wbudowanym prostownikiem", "code": "12 514 304"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "950 W",
+                            "Szerokość robocza": "430 mm",
+                            "Szerokość odsysania": "735 mm",
+                            "Wydajność": "1720 m²/h",
+                            "Zbiornik wody czystej": "20 l",
+                            "Zbiornik wody brudnej": "23 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "800 x 530 x 790 mm",
+                            "Ciężar roboczy max.": "134 kg (76 Ah 5)",
+                            "Standardowe wyposażenie": "Quick-Stopp"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 374 031"},
+                            {"name": "Tłumienie hałasu", "code": "20 543 435"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 621 033"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 530"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø430 mm", "code": "21 260 331"},
+                            {"name": "Szczotka szorująca Miękka Ø430 mm", "code": "21 260 332"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 260 333"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 260 334"},
+                            {"name": "Talerz nośny do padów Ø430 mm", "code": "21 260 431"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 260 433"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/63Ah5", "code": "21 026 930"},
+                            {"name": "Prostownik 24V/10A", "code": "20 578 700"},
+                            {"name": "Zestaw akum 24V/76Ah5", "code": "20 263 701"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/50Ah", "code": "21 750 631"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 43|B 40": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 444 310"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 445 310"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "950 W",
+                            "Szerokość robocza": "430 mm",
+                            "Szerokość odsysania": "735 mm",
+                            "Wydajność": "1720 m²/h",
+                            "Zbiornik wody czystej": "40 l",
+                            "Zbiornik wody brudnej": "45 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1190 x 510 x 980 mm",
+                            "Ciężar roboczy max.": "196 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "Quick-Stopp"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 374 035"},
+                            {"name": "System dozowania", "code": "21 524 230"},
+                            {"name": "Elektr. dozowanie wody", "code": "21 417 531"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 621 033"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 530"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø430 mm", "code": "21 260 331"},
+                            {"name": "Szczotka szorująca Miękka Ø430 mm", "code": "21 260 332"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 260 333"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 260 334"},
+                            {"name": "Talerz nośny do padów Ø430 mm", "code": "21 260 431"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 260 433"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 532"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/76Ah5", "code": "20 263 701"},
+                            {"name": "Zestaw akum 24V/85Ah5", "code": "21 648 701"},
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/50Ah", "code": "21 750 631"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 55|B 40": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 454 310"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 455 310"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "950 W",
+                            "Szerokość robocza": "550 mm",
+                            "Szerokość odsysania": "850 mm",
+                            "Wydajność": "2200 m²/h",
+                            "Zbiornik wody czystej": "40 l",
+                            "Zbiornik wody brudnej": "45 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1250 x 570 x 980 mm",
+                            "Ciężar roboczy max.": "198 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "Quick-Stopp"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 374 035"},
+                            {"name": "System dozowania", "code": "21 524 230"},
+                            {"name": "Elektr. dozowanie wody", "code": "21 417 531"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 620 531"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 330"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø530 mm", "code": "21 518 431"},
+                            {"name": "Szczotka szorująca Miękka Ø530 mm", "code": "21 518 432"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 518 433"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 518 436"},
+                            {"name": "Talerz nośny do padów Ø530 mm", "code": "21 518 531"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 518 533"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 532"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/76Ah5", "code": "20 263 701"},
+                            {"name": "Zestaw akum 24V/85Ah5", "code": "21 648 701"},
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/50Ah", "code": "21 750 631"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 43|BM 40": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 446 310"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 447 310"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "1130 W",
+                            "Szerokość robocza": "430 mm",
+                            "Szerokość odsysania": "735 mm",
+                            "Wydajność": "1720 m²/h",
+                            "Zbiornik wody czystej": "40 l",
+                            "Zbiornik wody brudnej": "45 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1190 x 510 x 980 mm",
+                            "Ciężar roboczy max.": "203 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "z trakcją, Quick-Stopp"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 374 035"},
+                            {"name": "System dozowania", "code": "21 524 230"},
+                            {"name": "Elektr. dozowanie wody", "code": "21 417 531"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 621 033"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 530"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø430 mm", "code": "21 260 331"},
+                            {"name": "Szczotka szorująca Miękka Ø430 mm", "code": "21 260 332"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 260 333"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 260 334"},
+                            {"name": "Talerz nośny do padów Ø430 mm", "code": "21 260 431"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 260 433"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 532"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/76Ah5", "code": "20 263 701"},
+                            {"name": "Zestaw akum 24V/85Ah5", "code": "21 648 701"},
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/50Ah", "code": "21 750 631"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 55|BM 40": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 456 310"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 457 310"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "1130 W",
+                            "Szerokość robocza": "550 mm",
+                            "Szerokość odsysania": "850 mm",
+                            "Wydajność": "2200 m²/h",
+                            "Zbiornik wody czystej": "40 l",
+                            "Zbiornik wody brudnej": "45 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1250 x 570 x 980 mm",
+                            "Ciężar roboczy max.": "205 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "z trakcją, Quick-Stopp"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 374 035"},
+                            {"name": "System dozowania", "code": "21 524 230"},
+                            {"name": "Elektr. dozowanie wody", "code": "21 417 531"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 620 531"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 330"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø530 mm", "code": "21 518 431"},
+                            {"name": "Szczotka szorująca Miękka Ø530 mm", "code": "21 518 432"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 518 433"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 518 436"},
+                            {"name": "Talerz nośny do padów Ø530 mm", "code": "21 518 531"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 518 533"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 532"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/76Ah5", "code": "20 263 701"},
+                            {"name": "Zestaw akum 24V/85Ah5", "code": "21 648 701"},
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/50Ah", "code": "21 750 631"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 55|BM 40 CYCLE": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 456 315"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 457 323"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "1130 W",
+                            "Szerokość robocza": "550 mm",
+                            "Szerokość odsysania": "850 mm",
+                            "Wydajność": "2200 m²/h",
+                            "Zbiornik wody czystej": "40 l",
+                            "Zbiornik wody brudnej": "45 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1250 x 570 x 980 mm",
+                            "Ciężar roboczy max.": "205 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "z trakcją, Quick-Stopp"
+                        },
+                        "options": [
+                            {"name": "System dozowania", "code": "21 524 230"},
+                            {"name": "Elektr. dozowanie wody", "code": "21 417 531"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 620 531"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 330"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø530 mm", "code": "21 518 431"},
+                            {"name": "Szczotka szorująca Miękka Ø530 mm", "code": "21 518 432"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 518 433"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 518 436"},
+                            {"name": "Talerz nośny do padów Ø530 mm", "code": "21 518 531"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 518 533"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 532"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/76Ah5", "code": "20 263 701"},
+                            {"name": "Zestaw akum 24V/85Ah5", "code": "21 648 701"},
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/50Ah", "code": "21 750 631"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 55|B 60": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 654 410"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 655 410"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "990 W",
+                            "Szerokość robocza": "550 mm",
+                            "Szerokość odsysania": "850 mm",
+                            "Wydajność": "2200 m²/h",
+                            "Zbiornik wody czystej": "60 l",
+                            "Zbiornik wody brudnej": "64 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1265 x 680 x 1005 mm",
+                            "Ciężar roboczy max.": "220 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "Quick-Stopp, elektroniczne dozowanie wody"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 711 130"},
+                            {"name": "System dozowania", "code": "21 061 931"},
+                            {"name": "Rolki odbojnikowe", "code": "21 058 230"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 620 531"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 330"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø530 mm", "code": "21 518 431"},
+                            {"name": "Szczotka szorująca Miękka Ø530 mm", "code": "21 518 432"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 518 433"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 518 436"},
+                            {"name": "Talerz nośny do padów Ø530 mm", "code": "21 518 531"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 518 533"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 531"},
+                            {"name": "Wąż do napełniania", "code": "21 654 000"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 55|BM 60": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 656 410"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 657 410"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "1130 W",
+                            "Szerokość robocza": "550 mm",
+                            "Szerokość odsysania": "850 mm",
+                            "Wydajność": "2200 m²/h",
+                            "Zbiornik wody czystej": "60 l",
+                            "Zbiornik wody brudnej": "64 l",
+                            "Ilość szczotek": "1",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1325 x 680 x 1005 mm",
+                            "Ciężar roboczy max.": "231 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "z trakcją, Quick-Stopp, elektroniczne dozowanie wody, Quick-Fill"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 711 130"},
+                            {"name": "System dozowania", "code": "21 061 931"},
+                            {"name": "Rolki odbojnikowe", "code": "21 058 230"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 620 531"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 330"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø530 mm", "code": "21 518 431"},
+                            {"name": "Szczotka szorująca Miękka Ø530 mm", "code": "21 518 432"},
+                            {"name": "Szczotka szorująca Sica 120", "code": "21 518 433"},
+                            {"name": "Włosie wieloskładnikowe", "code": "21 518 436"},
+                            {"name": "Talerz nośny do padów Ø530 mm", "code": "21 518 531"},
+                            {"name": "Tal. noś. do padów z włosiem", "code": "21 518 533"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 531"},
+                            {"name": "Wąż do napełniania", "code": "21 654 000"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    },
+                    "RA 66|BM 60": {
+                        "code": "",
+                        "variants": [
+                            {"name": "bez wbudowanego prostownika", "code": "10 666 410"},
+                            {"name": "z wbudowanym prostownikiem", "code": "10 667 410"}
+                        ],
+                        "specs": {
+                            "Pobór mocy": "1180 W",
+                            "Szerokość robocza": "660 mm",
+                            "Szerokość odsysania": "850 mm",
+                            "Wydajność": "2640 m²/h",
+                            "Zbiornik wody czystej": "60 l",
+                            "Zbiornik wody brudnej": "64 l",
+                            "Ilość szczotek": "2",
+                            "Napięcie": "24 V",
+                            "Wymiary": "1265 x 680 x 1005 mm",
+                            "Ciężar roboczy max.": "243 kg (105 Ah 5)",
+                            "Standardowe wyposażenie": "z trakcją, Quick-Stopp, elektroniczne dozowanie wody, Quick-Fill"
+                        },
+                        "options": [
+                            {"name": "Wykonanie noBAC®", "code": "21 711 130"},
+                            {"name": "System dozowania", "code": "21 061 932"},
+                            {"name": "Rolki odbojnikowe", "code": "21 058 230"}
+                        ],
+                        "accessories": [
+                            {"name": "Listwy ssące", "code": "20 620 531"},
+                            {"name": "Listwy ssące, odporne na olej", "code": "21 668 330"},
+                            {"name": "V-ERASER", "code": "21 629 730"},
+                            {"name": "Pasek wycieraczki z mikrofibry", "code": "21 629 800"},
+                            {"name": "Szczotka szorująca Standard Ø330 mm (2x)", "code": "21 072 631"},
+                            {"name": "Szczotka szorująca Miękka Ø330 mm (2x)", "code": "21 072 632"},
+                            {"name": "Szczotka szorująca Sica 120 Ø330 mm (2x)", "code": "21 072 633"},
+                            {"name": "Włosie wieloskładnikowe Ø330 mm (2x)", "code": "21 072 636"},
+                            {"name": "Talerz nośny do padów Ø330 mm (2x)", "code": "21 072 531"},
+                            {"name": "Tal. noś. do padów z włosiem Ø330 mm (2x)", "code": "21 072 533"},
+                            {"name": "Zamocowanie padu", "code": "21 072 700"},
+                            {"name": "Tool-Board", "code": "21 053 531"},
+                            {"name": "Wąż do napełniania", "code": "21 654 000"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akum 24V/105Ah5", "code": "20 264 200"},
+                            {"name": "Prostownik 24V/15A", "code": "20 578 800"},
+                            {"name": "Bateria Li-Ion 24V/100Ah", "code": "21 750 632"}
+                        ]
+                    }
+                },
+                "Zamiatarki": {
+                    "K 80/40": {
+                        "code": "18 040 001",
+                        "variants": [],
+                        "specs": {
+                            "Zasada zamiatania": "nadszczotkowa",
+                            "Ilość wałków zamiatających": "2",
+                            "Szerokość pracy bez szczotek bocznych": "470 mm",
+                            "Szerokość pracy z dwiema szczotkami bocznymi": "800 mm",
+                            "Średnia wydajność": "2800 m²/h",
+                            "Pojemnik": "40 l",
+                            "Napęd szczotek": "ręczny",
+                            "Ciężar": "14 kg",
+                            "Wymiary": "800 x 660 x 330 mm",
+                            "Standardowe wyposażenie": "z kompletem szczotek"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Szczotki boczne poliamid", "code": "20 998 500"},
+                            {"name": "Szczotka walcowa poliamid", "code": "20 998 300"}
+                        ],
+                        "batteries": []
+                    },
+                    "KS 50|BM 40": {
+                        "code": "18 250 101",
+                        "variants": [],
+                        "specs": {
+                            "Zasada zamiatania": "nadszczotkowa",
+                            "Ilość wałków zamiatających": "1",
+                            "Szerokość robocza": "510 / 780 mm",
+                            "Średnia wydajność": "3120 m²/h",
+                            "Pojemnik na zanieczyszczenia": "40 l",
+                            "Powierzchnia filtra": "2.25 m²",
+                            "Czyszczenie filtra": "mechaniczne",
+                            "Napęd": "12V akumulatora",
+                            "Ciężar": "79 kg",
+                            "Wymiary": "1285 x 750 x 965 mm",
+                            "Standardowe wyposażenie": "Szczotka walcowa/boczna PP, Filtr z poliestru, Bez akumulatora i prostownika"
+                        },
+                        "options": [
+                            {"name": "Szczotka boczna po lewej stronie", "code": "21 767 800"},
+                            {"name": "Ochrona szczotki bocznej, stal", "code": "21 767 900"},
+                            {"name": "Zintegrowana ładowarka", "code": "21 768 000"}
+                        ],
+                        "accessories": [
+                            {"name": "Szczotki boczne PP", "code": "21 755 900"},
+                            {"name": "Szczotki boczne PP + drut", "code": "21 755 600"},
+                            {"name": "Szczotki walcowe PP", "code": "21 755 700"},
+                            {"name": "Szczotki walcowe natur", "code": "21 756 000"},
+                            {"name": "Szczotki walcowe nylon", "code": "21 755 800"},
+                            {"name": "Filtr z poliestru", "code": "21 766 300"},
+                            {"name": "Filtr papierowy", "code": "21 766 400"}
+                        ],
+                        "batteries": [
+                            {"name": "Bateria 12V/76Ah 5", "code": "20 263 711"},
+                            {"name": "Prostownik 12V/15A", "code": "21 082 200"},
+                            {"name": "Bateria 12V/105Ah 5", "code": "20 264 210"},
+                            {"name": "Prostownik 12V/20A", "code": "21 082 400"}
+                        ]
+                    },
+                    "KS 60|BM 50": {
+                        "code": "18 260 101",
+                        "variants": [],
+                        "specs": {
+                            "Zasada zamiatania": "nadszczotkowa",
+                            "Ilość wałków zamiatających": "1",
+                            "Szerokość robocza": "600 / 870 mm",
+                            "Średnia wydajność": "3480 m²/h",
+                            "Pojemnik na zanieczyszczenia": "51 l",
+                            "Powierzchnia filtra": "2.68 m²",
+                            "Czyszczenie filtra": "mechaniczne",
+                            "Napęd": "12 V akumulatora",
+                            "Ciężar": "101 kg",
+                            "Wymiary": "1380 x 840 x 980 mm",
+                            "Standardowe wyposażenie": "Szczotka walcowa/boczna PP, Filtr z poliestru, Bez akumulatora i prostownika"
+                        },
+                        "options": [
+                            {"name": "Szczotka boczna po lewej stronie", "code": "21 767 800"},
+                            {"name": "Ochrona szczotki bocznej, stal", "code": "21 767 900"},
+                            {"name": "Zintegrowana ładowarka", "code": "21 768 000"}
+                        ],
+                        "accessories": [
+                            {"name": "Szczotki boczne PP (standard)", "code": "21 755 900"},
+                            {"name": "Szczotki boczne PP + drut", "code": "21 755 600"},
+                            {"name": "Szczotki walcowe PP (standard)", "code": "21 758 000"},
+                            {"name": "Szczotki walcowe nylon", "code": "21 756 900"},
+                            {"name": "Filtr z poliestru (standard)", "code": "21 766 500"},
+                            {"name": "Filtr papierowy", "code": "21 766 600"}
+                        ],
+                        "batteries": [
+                            {"name": "Bateria 12V/76Ah 5", "code": "20 263 711"},
+                            {"name": "Prostownik 12V/15A", "code": "21 082 200"},
+                            {"name": "Bateria 12V/105Ah 5", "code": "20 264 210"},
+                            {"name": "Prostownik 12V/20A", "code": "21 082 400"}
+                        ]
+                    },
+                    "AKS 70|BM 95": {
+                        "code": "18 270 102",
+                        "variants": [],
+                        "specs": {
+                            "Zasada zamiatania": "nadszczotkowa",
+                            "Ilość wałków zamiatających": "1",
+                            "Szerokość robocza bez szczotki bocznej": "700 mm",
+                            "Szerokość robocza z jedną szczotką boczną": "990 mm",
+                            "Średnia wydajność": "5445 m²/h",
+                            "Pojemnik na zanieczyszczenia": "95 l",
+                            "Powierzchnia filtra": "6 m²",
+                            "Czyszczenie filtra": "elektryczne",
+                            "Prędkość": "5.5 km/h",
+                            "Napęd": "24 V akumulatora",
+                            "Ciężar": "215 kg",
+                            "Wymiary": "1460 x 1150 x 1220 mm",
+                            "Standardowe wyposażenie": "Szczotka walcowa/boczne prawa PP, Filtr papierowy, Bez akumulatora i prostownika"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Szczotki boczne PP (standardowy)", "code": "21 766 800"},
+                            {"name": "Szczotki boczne PP double section do drobnych pyłów", "code": "21 757 700"},
+                            {"name": "Szczotki boczne PP + drut", "code": "21 757 500"},
+                            {"name": "Szczotki walcowe PP (standardowy)", "code": "21 766 700"},
+                            {"name": "Szczotki walcowe PP double section do drobnych pyłów", "code": "21 757 100"},
+                            {"name": "Szczotki walcowe natur", "code": "21 757 600"},
+                            {"name": "Szczotki walcowe nylon", "code": "21 757 000"},
+                            {"name": "2x wewnętrzny pojemnik na zmiotki", "code": "21 756 400"},
+                            {"name": "Filtr cylindryczny z poliestru", "code": "21 766 900"},
+                            {"name": "Filtr cylindryczny papierowy (standardowy)", "code": "21 767 000"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akumulatorów 24V/180Ah5", "code": "21 163 800"},
+                            {"name": "Prostownik 24V/25A", "code": "20 578 902"}
+                        ]
+                    },
+                    "AKS 70|BM 95 PERFORMANCE": {
+                        "code": "18 270 101",
+                        "variants": [],
+                        "specs": {
+                            "Zasada zamiatania": "nadszczotkowa",
+                            "Ilość wałków zamiatających": "1",
+                            "Szerokość robocza bez szczotki bocznej": "700 mm",
+                            "Szerokość robocza z jedną szczotką boczną": "990 mm",
+                            "Szerokość robocza z dwiema szczotkami bocznymi": "1330 mm",
+                            "Średnia wydajność": "7315 m²/h",
+                            "Pojemnik": "95 l",
+                            "Powierzchnia filtra": "6 m²",
+                            "Czyszczenie filtra": "elektryczne",
+                            "Prędkość": "5.5 km/h",
+                            "Napęd": "24V akumulatora",
+                            "Ciężar": "215 kg",
+                            "Wymiary": "1460 x 1150 x 1220 mm",
+                            "Standardowe wyposażenie": "Szczotka walcowa, 2 szczotki boczne PP, Niebrudzące koło, Listwy uszczelniające niebrudzące, Filtr poliestrowy, Bez akumulatora i prostownika"
+                        },
+                        "options": [
+                            {"name": "Przednia osłona przeciwpyłowa", "code": "21 768 800"},
+                            {"name": "Wbudowany odkurzacz (czarny)", "code": "21 769 100"},
+                            {"name": "Ładowarka pokładowa 24V/13A", "code": "21 768 900"},
+                            {"name": "Ładowarka pokładowa 24V/25A", "code": "21 769 000"}
+                        ],
+                        "accessories": [
+                            {"name": "Szczotki boczne PP (standardowy)", "code": "21 766 800"},
+                            {"name": "Szczotki boczne PP \"double section\" do drobnych pyłów", "code": "21 757 700"},
+                            {"name": "Szczotki boczne PP+drut", "code": "21 757 500"},
+                            {"name": "Szczotki walcowe PP (standardowy)", "code": "21 766 700"},
+                            {"name": "Szczotki walcowe PP \"double section\" do drobnych pyłów", "code": "21 757 100"},
+                            {"name": "Szczotki walcowe natur", "code": "21 757 600"},
+                            {"name": "Szczotki walcowe nylon", "code": "21 757 000"},
+                            {"name": "2x wewnętrzny pojemnik na zmiotki", "code": "21 756 400"},
+                            {"name": "Filtr cylindryczny poliestrowy", "code": "21 766 900"},
+                            {"name": "Filtr cylindryczny papierowy", "code": "21 767 000"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akumulatorów 24V/180Ah5", "code": "21 163 800"},
+                            {"name": "Prostownik 24V/25A", "code": "20 578 902"}
+                        ]
+                    },
+                    "AKS 70|BM 95 H PERFORMANCE": {
+                        "code": "18 270 201",
+                        "variants": [],
+                        "specs": {
+                            "Zasada zamiatania": "nadszczotkowa",
+                            "Ilość wałków zamiatających": "1",
+                            "Szerokość robocza bez szczotek bocznych": "700 mm",
+                            "Szerokość robocza z jedną szczotką boczną": "950 mm",
+                            "Szerokość robocza z dwiema szczotkami bocznymi": "1250 mm",
+                            "Średnia wydajność": "6875 m²/h",
+                            "Pojemnik na zanieczyszczenia": "95 l",
+                            "Powierzchnia filtra": "5 m²",
+                            "Czyszczenie filtra": "elektryczne",
+                            "Prędkość": "5.5 km/h",
+                            "Napęd": "24 V akumulatora",
+                            "Ciężar": "312 kg",
+                            "Wymiary": "1380 x 960 x 1180 mm",
+                            "Standardowe wyposażenie": "Szczotka walcowa/2 szczotki boczne PP, nie brudzące koło, listwy uszczelniające niebrudzące, filtr poliestrowy, hydrauliczne opróżnianie, bez akumulatora i prostownika"
+                        },
+                        "options": [
+                            {"name": "Wbudowany odkurzacz (czarny)", "code": "21 769 500"},
+                            {"name": "Ładowarka pokładowa 24V 13A", "code": "21 769 300"},
+                            {"name": "Ładowarka pokładowa 24V 25A", "code": "21 769 400"}
+                        ],
+                        "accessories": [
+                            {"name": "Szczotki boczne PP (standardowy)", "code": "21 755 900"},
+                            {"name": "Szczotki boczne PP+drut", "code": "21 755 600"},
+                            {"name": "Szczotki walcowe PP (standardowy)", "code": "21 766 700"},
+                            {"name": "Szczotki walcowe PP \"double section\" do drobnych pyłów", "code": "21 757 100"},
+                            {"name": "Szczotki walcowe natur", "code": "21 757 600"},
+                            {"name": "Szczotki walcowe nylon", "code": "21 757 000"},
+                            {"name": "Filtr cylindryczny z poliestru (standardowy)", "code": "21 766 900"},
+                            {"name": "Filtr cylindryczny papierowy", "code": "21 767 000"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akumulatorów 24V/180Ah5", "code": "21 163 800"},
+                            {"name": "Prostownik 24V/25A", "code": "20 578 902"}
+                        ]
+                    },
+                    "AKS 85|BM 150 H PERFORMANCE": {
+                        "code": "18 290 101",
+                        "variants": [],
+                        "specs": {
+                            "Zasada zamiatania": "nadszczotkowa",
+                            "Ilość wałków zamiatających": "1",
+                            "Szerokość robocza bez szczotek bocznych": "850 mm",
+                            "Szerokość robocza z jedną szczotką boczną": "1200 mm",
+                            "Szerokość robocza z dwiema szczotkami bocznymi": "1450 mm",
+                            "Średnia wydajność": "8700 m²/h",
+                            "Pojemnik na zanieczyszczenia": "150 l",
+                            "Powierzchnia filtra": "6 m²",
+                            "Czyszczenie filtra": "elektryczne",
+                            "Prędkość": "6 km/h",
+                            "Napęd": "36 V akumulatora",
+                            "Ciężar": "535 kg",
+                            "Wymiary": "1750 x 1150 x 1500 mm",
+                            "Standardowe wyposażenie": "Szczotka walcowa/2 szczotki boczne PP, listwa uszczelniające frontal niebrudzące, filtr poliestrowy, hydrauliczne opróżnianie, bez akumulatora i prostownika"
+                        },
+                        "options": [
+                            {"name": "Przednia osłona przeciwpyłowa", "code": "21 769 900"},
+                            {"name": "Drugi silnik wolnossący", "code": "21 770 100"},
+                            {"name": "Kompletne oświetlenie", "code": "21 770 300"},
+                            {"name": "Poliestrowy filtr kieszeniowy", "code": "21 770 400"},
+                            {"name": "Antystatyczny filtr kieszeniowy", "code": "21 770 500"},
+                            {"name": "Wbudowany odkurzacz (czarny)", "code": "21 770 600"},
+                            {"name": "Ładowarka pokładowa 36V 25A", "code": "21 770 000"}
+                        ],
+                        "accessories": [
+                            {"name": "Szczotki boczne PP (standardowy)", "code": "21 766 800"},
+                            {"name": "Szczotki boczne PP \"double section\" do drobnych pyłów", "code": "21 757 700"},
+                            {"name": "Szczotki boczne PP+drut", "code": "21 757 500"},
+                            {"name": "Szczotki walcowe PP (standardowy)", "code": "21 767 100"},
+                            {"name": "Szczotki walcowe PP \"double section\" do drobnych pyłów", "code": "21 757 400"},
+                            {"name": "Szczotki walcowe natur", "code": "21 757 200"},
+                            {"name": "Szczotki walcowe nylon", "code": "21 757 300"},
+                            {"name": "Filtr cylindryczny z poliestru (standardowy)", "code": "21 766 900"},
+                            {"name": "Filtr cylindryczny papierowy", "code": "21 767 000"}
+                        ],
+                        "batteries": [
+                            {"name": "Zestaw akumulatorów 36V/240Ah5", "code": "20 635 801"},
+                            {"name": "Prostownik 36V/45A", "code": "21 616 200"}
+                        ]
+                    }
+                },
+                "Maszyny jednotarczowe": {
+                    "E 400|S": {
+                        "code": "10 820 101",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1200 W",
+                            "Szerokość robocza": "400 mm",
+                            "Wysokość robocza max.": "285 mm",
+                            "Obroty szczotki": "140 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "415 x 550 x 1200 mm",
+                            "Ciężar": "40 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 701 003"},
+                            {"name": "Zbiornik 12 litrów", "code": "20 251 630"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Dodatkowy obciążnik 15 kg", "code": "20 932 230"},
+                            {"name": "Szczotka szorująca standard ø 400 mm", "code": "20 059 031"},
+                            {"name": "Szczotka szorująca miękka ø 400 mm", "code": "20 059 032"},
+                            {"name": "Szczotka szorująca Sica 120 ø 400 mm", "code": "20 059 038"},
+                            {"name": "Szczotka do szamponowania ø 400 mm", "code": "20 059 034"},
+                            {"name": "Szczotka Union - do polerowania ø 400 mm", "code": "20 059 035"},
+                            {"name": "Szczotka z włosia wieloskładnikowego ø 400 mm", "code": "20 059 057"},
+                            {"name": "Talerz nośny do padów ø 406 mm", "code": "20 059 044"},
+                            {"name": "Talerz ścierny na papier ścierny ø 406 mm", "code": "20 059 042"}
+                        ],
+                        "batteries": []
+                    },
+                    "bionic": {
+                        "code": "10 441 701",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1200 W",
+                            "Szerokość robocza": "430 mm",
+                            "Wysokość robocza max.": "285 mm",
+                            "Obroty szczotki": "140 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "450 x 565 x 1200 mm",
+                            "Ciężar": "42 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 701 003"},
+                            {"name": "Zbiornik, 12 litrów", "code": "20 251 630"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Dodatkowy obciążnik 15 kg", "code": "20 932 230"},
+                            {"name": "Szczotka szorująca Standard ø 430 mm", "code": "20 078 331"},
+                            {"name": "Szczotka szorująca Miękka ø 430 mm", "code": "20 078 332"},
+                            {"name": "Szczotka szorująca Sica 120 ø 430 mm", "code": "20 078 335"},
+                            {"name": "Szczotka do szamponowania ø 430 mm", "code": "20 078 337"},
+                            {"name": "Union - do polerowania ø 430 mm", "code": "20 078 339"},
+                            {"name": "Włosie wieloskładnikowe ø 430 mm", "code": "20 078 344"},
+                            {"name": "Talerz nośny do padów ø 430 mm", "code": "20 253 531"}
+                        ],
+                        "batteries": []
+                    },
+                    "E 500|E": {
+                        "code": "10 800 201",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1200 W",
+                            "Szerokość robocza": "500 mm",
+                            "Wysokość robocza max.": "290 mm",
+                            "Obroty szczotki": "140 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "480 x 630 x 1215 mm",
+                            "Ciężar": "42 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 701 003"},
+                            {"name": "Zbiornik, 12 litrów", "code": "20 251 630"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Dodatkowy obciążnik 20 kg", "code": "20 932 330"},
+                            {"name": "Szczotka szorująca Standard ø 460 mm", "code": "20 568 931"},
+                            {"name": "Szczotka do szamponowania ø 460 mm", "code": "20 568 933"},
+                            {"name": "Włosie wieloskładnikowe ø 460 mm", "code": "20 568 937"},
+                            {"name": "Talerz nośny do padów ø 460 mm", "code": "20 229 145"}
+                        ],
+                        "batteries": []
+                    },
+                    "E 500|S": {
+                        "code": "10 800 101",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1800 W",
+                            "Szerokość robocza": "500 mm",
+                            "Wysokość robocza max.": "330 mm",
+                            "Obroty szczotki": "140 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "480 x 630 x 1215 mm",
+                            "Ciężar": "50 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 701 003"},
+                            {"name": "Zbiornik, 12 litrów", "code": "20 251 630"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Dodatkowy obciążnik 20 kg", "code": "20 932 330"},
+                            {"name": "Szczotka szorująca Standard ø 460 mm", "code": "20 568 931"},
+                            {"name": "Szczotka do szamponowania ø 460 mm", "code": "20 568 933"},
+                            {"name": "Włosie wieloskładnikowe ø 460 mm", "code": "20 568 937"},
+                            {"name": "Talerz nośny do padów ø 460 mm", "code": "20 229 145"}
+                        ],
+                        "batteries": []
+                    }
+                },
+                "DuoSpeed": {
+                    "Duo Speed": {
+                        "code": "10 820 140",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1300/1800 W",
+                            "Szerokość robocza": "400 mm",
+                            "Wysokość robocza max.": "330 mm",
+                            "Obroty szczotki": "150/300 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "415 x 550 x 1200 mm",
+                            "Ciężar": "48.5 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 701 003"},
+                            {"name": "Zbiornik, 12 litrów", "code": "20 251 630"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Dodatkowy obciążnik 15 kg", "code": "20 932 230"},
+                            {"name": "Szczotka szorująca Standard (ø 400 mm)", "code": "20 059 031"},
+                            {"name": "Szczotka szorująca Miękka (ø 400 mm)", "code": "20 059 032"},
+                            {"name": "Szczotka Sica 120 (ø 400 mm)", "code": "20 059 038"},
+                            {"name": "Szczotka do szamponowania (ø 400 mm)", "code": "20 059 034"},
+                            {"name": "Polerowania Union (ø 400 mm)", "code": "20 059 035"},
+                            {"name": "Włosie wieloskładnikowe (ø 400 mm)", "code": "20 059 057"},
+                            {"name": "Talerz nośny do padów (ø 406 mm)", "code": "20 059 046"}
+                        ],
+                        "batteries": []
+                    }
+                },
+                "HS 434": {
+                    "HS 434": {
+                        "code": "10 440 101",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1500 W",
+                            "Szerokość robocza": "430 mm",
+                            "Wysokość robocza max.": "340 mm",
+                            "Obroty szczotki": "400 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "450 x 565 x 1170 mm",
+                            "Ciężar": "33 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 701 003"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Szczotka polerująca Union (ø 430 mm)", "code": "20 078 339"},
+                            {"name": "Talerz nośny do padów (ø 430 mm)", "code": "20 253 532"}
+                        ],
+                        "batteries": []
+                    }
+                },
+                "Polerki": {
+                    "HS 1001": {
+                        "code": "11 220 102",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1500 W",
+                            "Szerokość robocza": "500 mm",
+                            "Wysokość robocza max.": "330 mm",
+                            "Obroty szczotki": "1000 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "500 x 770 x 1160 mm",
+                            "Ciężar": "42.5 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 702 003"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Zamocowanie padu", "code": "20 148 200"}
+                        ],
+                        "batteries": []
+                    },
+                    "HS 1601": {
+                        "code": "11 220 202",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1500 W",
+                            "Szerokość robocza": "500 mm",
+                            "Wysokość robocza max.": "330 mm",
+                            "Obroty szczotki": "1600 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "500 x 770 x 1160 mm",
+                            "Ciężar": "42.5 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 702 003"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Zamocowanie padu", "code": "20 148 200"}
+                        ],
+                        "batteries": []
+                    }
+                },
+                "Thermopad": {
+                    "THERMOPAD": {
+                        "code": "10 431 101",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "3050 W",
+                            "Silnik szczotki": "900 W",
+                            "Dmuchawa nagrzewnicy": "2150 W",
+                            "Szerokość robocza": "430 mm",
+                            "Wysokość robocza max.": "300 mm",
+                            "Obroty szczotki": "190 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "450 x 565 x 1170 mm",
+                            "Ciężar": "35 kg"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Spryskiwacz (zestaw)", "code": "10 701 003"},
+                            {"name": "Zbiornik, 12 litrów", "code": "20 251 630"},
+                            {"name": "Przedłużacz 12 m czerwony", "code": "20 588 830"},
+                            {"name": "Przedłużacz 25 m szary", "code": "20 588 930"},
+                            {"name": "Talerz nośny do padów aluminium, Ø 406 mm", "code": "20 253 235"}
+                        ],
+                        "batteries": []
+                    }
+                },
+                "Maszyny mimośrodowe": {
+                    "X 500": {
+                        "code": "10 311 000",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "750 W",
+                            "Szerokość robocza": "500 mm",
+                            "Wysokość robocza max.": "335 mm",
+                            "Obroty szczotki": "2810 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "540 x 500 x 1170 mm",
+                            "Ciężar": "53.5 kg",
+                            "Klasa ochrony": "IPX4 / IP55 (Motor)"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Zbiornik, 12 litrów", "code": "21 655 030"},
+                            {"name": "Dodatkowy obciążnik 15 kg", "code": "21 634 130"},
+                            {"name": "Super Pad czarny (5 sztuk)", "code": "21 664 100"},
+                            {"name": "Super Pad czerwony (5 sztuk)", "code": "21 663 500"},
+                            {"name": "Super Pad zielony (5 sztuk)", "code": "21 663 400"},
+                            {"name": "Pady z mikrofazy (5 sztuk)", "code": "21 663 600"},
+                            {"name": "Scrub Pad zielony (4 sztuki)", "code": "21 663 700"},
+                            {"name": "Twister Pad czerwony (2 sztuki)", "code": "21 584 204"},
+                            {"name": "Twister Pad biały (2 sztuki)", "code": "21 583 603"},
+                            {"name": "Twister Pad żółty (2 sztuki)", "code": "21 583 602"},
+                            {"name": "Twister Pad zielony (2 sztuki)", "code": "21 583 601"},
+                            {"name": "Twister Xtreme Pad - TXP (2 sztuki)", "code": "21 018 809"}
+                        ],
+                        "batteries": []
+                    },
+                    "X 500|S": {
+                        "code": "10 310 000",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1200 W",
+                            "Szerokość robocza": "500 mm",
+                            "Wysokość robocza max.": "240 mm",
+                            "Obroty szczotki": "3000 obr/min",
+                            "Długość przewodu": "12 m",
+                            "Wymiary": "540 x 500 x 1170 mm",
+                            "Ciężar": "56 kg",
+                            "Klasa ochrony": "IPX4"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Zbiornik, 12 litrów", "code": "21 655 030"},
+                            {"name": "Dodatkowy obciążnik 15 kg", "code": "21 634 130"},
+                            {"name": "Super Pad czarny (5 sztuk)", "code": "21 664 100"},
+                            {"name": "Super Pad czerwony (5 sztuk)", "code": "21 663 500"},
+                            {"name": "Super Pad zielony (5 sztuk)", "code": "21 663 400"},
+                            {"name": "Pady z mikrofazy (5 sztuk)", "code": "21 663 600"},
+                            {"name": "Scrub Pad zielony (4 sztuki)", "code": "21 663 700"},
+                            {"name": "Twister Pad czerwony (2 sztuki)", "code": "21 584 204"},
+                            {"name": "Twister Pad biały (2 sztuki)", "code": "21 583 603"},
+                            {"name": "Twister Pad żółty (2 sztuki)", "code": "21 583 602"},
+                            {"name": "Twister Pad zielony (2 sztuki)", "code": "21 583 601"},
+                            {"name": "Twister Xtreme Pad - TXP (2 sztuki)", "code": "21 018 809"}
+                        ],
+                        "batteries": []
+                    }
+                },
+                "Maszyny piorące": {
+                    "SX 44": {
+                        "code": "11 063 001",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1570 W",
+                            "Wydajność spryskiwania": "1.5 l/min",
+                            "Ciśnienie spryskiwania": "4 bar",
+                            "Przepływ powietrza max.": "45 l/s",
+                            "Podciśnienie max.": "295 mbar",
+                            "Zbiornik wody czystej": "14 l",
+                            "Zbiornik wody brudnej": "14 l",
+                            "Długość węża": "2.5 m",
+                            "Długość przewodu": "10 m",
+                            "Wymiary": "300 x 420 x 530 mm",
+                            "Ciężar": "12 kg",
+                            "Standardowe wyposażenie": "2,5 m wąż ssąco-spryskujący, Ø32 mm rura ssąca, Dysza podłogowa z tworzywa sztucznego (szerokość 27 cm, 1 dysza natryskowa)"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Dysza do tapicerki aluminium", "code": "20 770 000"},
+                            {"name": "Dysza do tapicerki plastik", "code": "20 770 100"},
+                            {"name": "Dysza podłogowa plastik", "code": "20 877 430"},
+                            {"name": "Dysza podłogowa alu", "code": "21 386 400"},
+                            {"name": "Dysza podłogowa kombi", "code": "20 770 200"},
+                            {"name": "Dysza podłogowa z Turbo", "code": "21 386 500"},
+                            {"name": "Wąż natryskowo-ssący 2,5 m", "code": "20 780 830"},
+                            {"name": "Wąż natryskowo-ssący 5 m", "code": "21 386 300"}
+                        ],
+                        "batteries": []
+                    },
+                    "SX 344": {
+                        "code": "11 066 001",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1580 W",
+                            "Wydajność spryskiwania": "4.5 l/min",
+                            "Ciśnienie spryskiwania": "9 bar",
+                            "Przepływ powietrza max.": "45 l/s",
+                            "Podciśnienie max.": "294 mbar",
+                            "Zbiornik wody czystej": "30 l",
+                            "Zbiornik wody brudnej": "30 l",
+                            "Długość węża": "5 m",
+                            "Długość przewodu": "10 m",
+                            "Wymiary": "380 x 500 x 780 mm",
+                            "Ciężar": "24 kg",
+                            "Standardowe wyposażenie": "5 m wąż ssąco-spryskujący ø38 mm, Rura ssąca, Dysza podłogowa aluminiowa (szerokość 30 cm, 3 dysze natryskowe)"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Dysza do tapicerki aluminium", "code": "20 770 000"},
+                            {"name": "Dysza do tapicerki plastik", "code": "20 770 100"},
+                            {"name": "Dysza podłogowa plastik", "code": "20 877 430"},
+                            {"name": "Dysza podłogowa alu", "code": "21 386 400"},
+                            {"name": "Dysza podłogowa kombi", "code": "20 770 200"},
+                            {"name": "Dysza podłogowa z Turbo-szczotką elektryczną", "code": "21 386 500"},
+                            {"name": "Wąż natryskowo-ssący", "code": "20 780 830"},
+                            {"name": "Wąż natryskowo-ssący (50 mm)", "code": "21 386 300"}
+                        ],
+                        "batteries": []
+                    },
+                    "TA 50|K 50": {
+                        "code": "11 064 001",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "1580 W",
+                            "Wydajność spryskiwania": "4.5 l/min",
+                            "Ciśnienie spryskiwania": "9 bar",
+                            "Przepływ powietrza max.": "45 l/s",
+                            "Podciśnienie max.": "333 mbar",
+                            "Zbiornik wody czystej": "50 l",
+                            "Zbiornik wody brudnej": "50 l",
+                            "Długość węża": "5 m",
+                            "Długość przewodu": "15 m",
+                            "Wymiary": "500 x 860 x 950 mm",
+                            "Ciężar": "55 kg",
+                            "Standardowe wyposażenie": "Zestaw do ekstrakcji natryskowej"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Dysza do tapicerki aluminium", "code": "20 770 000"},
+                            {"name": "Dysza do tapicerki plastik", "code": "20 770 100"},
+                            {"name": "Dysza podłogowa plastik", "code": "20 877 430"},
+                            {"name": "Dysza podłogowa alu + dysze natryskowe", "code": "21 386 400"},
+                            {"name": "Dysza podłogowa kombi", "code": "20 770 200"},
+                            {"name": "Dysza podłogowa z Turbo-szczotką elektryczną", "code": "21 386 500"},
+                            {"name": "Wąż natryskowo-ssący", "code": "20 780 830"},
+                            {"name": "Wąż natryskowo-ssący 50 mm", "code": "21 386 300"}
+                        ],
+                        "batteries": []
+                    }
+                },
+                "Odkurzacze kolumnowe": {
+                    "XP 2 eco": {
+                        "code": "11 645 002",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "890 W",
+                            "Przepływ powietrza max.": "43.3 l/s",
+                            "Podciśnienie max.": "243 mbar",
+                            "Worek na pył": "5.3 l",
+                            "Obroty szczotki": "2700 obr/min",
+                            "Szerokość robocza": "378 mm",
+                            "Długość przewodu": "12 m",
+                            "Napęd szczotek": "pasowy",
+                            "Wymiary": "315 x 375 x 1190 mm",
+                            "Ciężar": "8.1 kg",
+                            "Klasa bezpieczeństwa": "II",
+                            "Standardowe wyposażenie": "Paski szczotkowe standard, Dysza fugowa, Klamra na osprzęt, Filtr HEPA, Dysza do tapicerki, Komplet okrągłych szczotek, Mikrofiltr"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Dysza fugowa", "code": "20 212 900"},
+                            {"name": "Dysza do tapicerki", "code": "20 609 100"},
+                            {"name": "Komplet okrągłych szczotek", "code": "20 605 030"},
+                            {"name": "Mikrofiltr", "code": "21 530 700"},
+                            {"name": "Filtr mikro", "code": "20 600 700"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Wąż przedłużający 1,7 m", "code": "20 597 300"},
+                            {"name": "Komplet filtrów (10 szt. worków papierowych i filtr mikro klasa M)", "code": "20 615 630"},
+                            {"name": "Zestaw Hepa (8 szt. worków papierowych ultra, 1 filtr Hepa H13)", "code": "20 889 230"},
+                            {"name": "Rura przedłużająca ø 40 mm, długość 480 mm", "code": "20 213 100"}
+                        ],
+                        "batteries": []
+                    },
+                    "XP 3 eco": {
+                        "code": "11 645 003",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "890 W",
+                            "Przepływ powietrza max.": "43.3 l/s",
+                            "Podciśnienie max.": "243 mbar",
+                            "Worek na pył": "5.3 l",
+                            "Obroty szczotki": "2700 obr/min",
+                            "Szerokość robocza": "448 mm",
+                            "Długość przewodu": "12 m",
+                            "Napęd szczotek": "pasowy",
+                            "Wymiary": "315 x 455 x 1190 mm",
+                            "Ciężar": "8.2 kg",
+                            "Klasa bezpieczeństwa": "II",
+                            "Standardowe wyposażenie": "Paski szczotkowe standard, Dysza fugowa, Klamra na osprzęt, Filtr HEPA, Dysza do tapicerki, Komplet okrągłych szczotek, Mikrofiltr"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Dysza fugowa", "code": "20 212 900"},
+                            {"name": "Dysza do tapicerki", "code": "20 609 100"},
+                            {"name": "Komplet okrągłych szczotek", "code": "20 805 530"},
+                            {"name": "Mikrofiltr", "code": "21 530 700"},
+                            {"name": "Filtr mikro", "code": "20 600 700"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 599 930"},
+                            {"name": "Worek papierowy, 120 sztuk", "code": "20 599 931"},
+                            {"name": "Wąż przedłużający 1,7 m", "code": "20 597 300"},
+                            {"name": "Komplet filtrów (10 szt. worków papierowych i filtr mikro klasa M)", "code": "20 615 630"},
+                            {"name": "Zestaw Hepa (8 szt. worków papierowych ultra, 1 filtr Hepa H13)", "code": "20 889 230"},
+                            {"name": "Rura przedłużająca ø 40 mm, długość 480 mm", "code": "20 213 100"}
+                        ],
+                        "batteries": []
+                    },
+                    "BS 361 eco": {
+                        "code": "11 643 101",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "875 W",
+                            "Przepływ powietrza max.": "45 l/s",
+                            "Podciśnienie max.": "165 mbar",
+                            "Worek na pył": "5 l",
+                            "Obroty szczotki": "3300 obr/min",
+                            "Szerokość robocza": "360 mm",
+                            "Długość przewodu": "12 m",
+                            "Napęd szczotek": "pasowy",
+                            "Wymiary": "260 x 360 x 1240 mm",
+                            "Ciężar": "8.8 kg",
+                            "Klasa bezpieczeństwa": "II",
+                            "Standardowe wyposażenie": "Paski szczotkowe standard, Dysza fugowa, Klamra na osprzęt, Filtr HEPA"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Paski szczotkowe standard", "code": "20 207 531"},
+                            {"name": "Dysza fugowa", "code": "20 212 900"},
+                            {"name": "Klamra na osprzęt", "code": "20 212 830"},
+                            {"name": "Filtr HEPA", "code": "21 527 700"},
+                            {"name": "Paski szczotkowe twarde", "code": "20 207 532"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 208 430"},
+                            {"name": "Worek papierowy, 200 sztuk", "code": "20 208 431"},
+                            {"name": "Mikrofiltr (klasa M)", "code": "20 213 200"},
+                            {"name": "Wąż przedłużający 1,7 m", "code": "20 597 300"}
+                        ],
+                        "batteries": []
+                    },
+                    "BS 461 eco": {
+                        "code": "11 644 101",
+                        "variants": [],
+                        "specs": {
+                            "Pobór mocy": "895 W",
+                            "Przepływ powietrza max.": "45 l/s",
+                            "Podciśnienie max.": "165 mbar",
+                            "Worek na pył": "5 l",
+                            "Obroty szczotki": "3300 obr/min",
+                            "Szerokość robocza": "460 mm",
+                            "Długość przewodu": "12 m",
+                            "Napęd szczotek": "pasowy",
+                            "Wymiary": "260 x 460 x 1240 mm",
+                            "Ciężar": "9.4 kg",
+                            "Klasa bezpieczeństwa": "II",
+                            "Standardowe wyposażenie": "Paski szczotkowe standard, Dysza fugowa, Klamra na osprzęt, Filtr HEPA"
+                        },
+                        "options": [],
+                        "accessories": [
+                            {"name": "Paski szczotkowe standard", "code": "20 212 131"},
+                            {"name": "Dysza fugowa", "code": "20 212 900"},
+                            {"name": "Klamra na osprzęt", "code": "20 212 830"},
+                            {"name": "Filtr HEPA", "code": "21 527 700"},
+                            {"name": "Paski szczotkowe twarde", "code": "20 212 132"},
+                            {"name": "Worek papierowy, 20 sztuk", "code": "20 208 430"},
+                            {"name": "Worek papierowy, 200 sztuk", "code": "20 208 431"},
+                            {"name": "Mikrofiltr (klasa M)", "code": "20 213 200"},
+                            {"name": "Wąż przedłużający 1,7 m", "code": "20 597 300"}
+                        ],
+                        "batteries": []
+                    }
+                }
+            }
+        };
+
+        // Dodaj pierwszy produkt przy starcie
+        window.onload = function() {
+            addProduct();
+        };
+
+        // Zabezpieczenie przed podwójnym kliknięciem
+        let isAddingProduct = false;
+        
+        function addProduct() {
+            // Zapobiegaj podwójnemu wywołaniu na mobile
+            if (isAddingProduct) return;
+            isAddingProduct = true;
+            setTimeout(function() { isAddingProduct = false; }, 500);
+            
+            productCounter++;
+            const container = document.getElementById('productsContainer');
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product-item';
+            productDiv.id = `product-${productCounter}`;
+            
+            // Generuj opcje marek
+            const brandOptions = Object.keys(productsDatabase).map(brand => 
+                `<option value="${brand}">${brand}</option>`
+            ).join('');
+            
+            productDiv.innerHTML = `
+                <div class="product-header">
+                    <span class="product-number">Produkt #${productCounter}</span>
+                    ${productCounter > 1 ? `<button type="button" class="remove-product" onclick="removeProduct(${productCounter})">✕ Usuń</button>` : ''}
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label>Marka <span class="required">*</span></label>
+                        <select name="productBrand_${productCounter}" id="brand_${productCounter}" onchange="updateCategories(${productCounter})" required>
+                            <option value="">-- Wybierz markę --</option>
+                            ${brandOptions}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategoria <span class="required">*</span></label>
+                        <select name="productCategory_${productCounter}" id="category_${productCounter}" onchange="updateDevices(${productCounter})" required disabled>
+                            <option value="">-- Najpierw wybierz markę --</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Urządzenie <span class="required">*</span></label>
+                    <select name="productName_${productCounter}" id="device_${productCounter}" onchange="updateAccessories(${productCounter})" required disabled>
+                        <option value="">-- Najpierw wybierz kategorię --</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="variant_container_${productCounter}" style="display: none;">
+                    <label>Wariant <span class="required">*</span></label>
+                    <select name="productVariant_${productCounter}" id="variant_${productCounter}" onchange="updateVariantCode(${productCounter})">
+                        <option value="">-- Wybierz wariant --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Kod produktu</label>
+                    <input type="text" name="productCode_${productCounter}" id="code_${productCounter}" readonly style="background: #f5f5f5;">
+                </div>
+
+                <div class="form-group" id="specs_container_${productCounter}" style="display: none;">
+                    <label>📋 Dane techniczne</label>
+                    <div id="specs_${productCounter}" style="background: #e8f4f8; padding: 15px; border-radius: 8px; border: 2px solid #4a90e2; font-size: 13px; line-height: 1.8;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Opcje fabryczne</label>
+                    <div id="options_${productCounter}" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 2px solid #e0e0e0;">
+                        <p style="color: #999; font-size: 13px;">Wybierz najpierw urządzenie</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Akcesoria / Osprzęt</label>
+                    <div id="accessories_${productCounter}" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 2px solid #e0e0e0;">
+                        <p style="color: #999; font-size: 13px;">Wybierz najpierw urządzenie</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Baterie</label>
+                    <div id="batteries_${productCounter}" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 2px solid #e0e0e0;">
+                        <p style="color: #999; font-size: 13px;">Wybierz najpierw urządzenie</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Ilość</label>
+                        <input type="number" name="productQuantity_${productCounter}" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Rabat (%)</label>
+                        <input type="number" name="productDiscount_${productCounter}" min="0" max="100" step="0.01" placeholder="np. 15">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Dodatkowe uwagi do produktu</label>
+                    <textarea id="productNotes_${productCounter}" name="productNotes_${productCounter}" placeholder="Specjalne wymagania, uwagi..."></textarea>
+                </div>
+            `;
+            
+            container.appendChild(productDiv);
+        }
+
+        function updateCategories(productId) {
+            const brandSelect = document.getElementById(`brand_${productId}`);
+            const categorySelect = document.getElementById(`category_${productId}`);
+            const deviceSelect = document.getElementById(`device_${productId}`);
+            const codeInput = document.querySelector(`[name="productCode_${productId}"]`);
+            const optionsDiv = document.getElementById(`options_${productId}`);
+            
+            const selectedBrand = brandSelect.value;
+            
+            // Reset wszystkiego
+            categorySelect.innerHTML = '<option value="">-- Wybierz kategorię --</option>';
+            deviceSelect.innerHTML = '<option value="">-- Najpierw wybierz kategorię --</option>';
+            codeInput.value = '';
+            optionsDiv.innerHTML = '<p style="color: #999; font-size: 13px;">Wybierz urządzenie</p>';
+            deviceSelect.disabled = true;
+            
+            if (selectedBrand && productsDatabase[selectedBrand]) {
+                categorySelect.disabled = false;
+                const categories = Object.keys(productsDatabase[selectedBrand]).sort();
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                });
+            } else {
+                categorySelect.disabled = true;
+            }
+        }
+
+        function updateDevices(productId) {
+            const brandSelect = document.getElementById(`brand_${productId}`);
+            const categorySelect = document.getElementById(`category_${productId}`);
+            const deviceSelect = document.getElementById(`device_${productId}`);
+            const codeInput = document.querySelector(`[name="productCode_${productId}"]`);
+            const optionsDiv = document.getElementById(`options_${productId}`);
+            
+            const selectedBrand = brandSelect.value;
+            const selectedCategory = categorySelect.value;
+            
+            // Reset urządzenia
+            deviceSelect.innerHTML = '<option value="">-- Wybierz urządzenie --</option>';
+            codeInput.value = '';
+            optionsDiv.innerHTML = '<p style="color: #999; font-size: 13px;">Wybierz urządzenie</p>';
+            
+            if (selectedBrand && selectedCategory && productsDatabase[selectedBrand][selectedCategory]) {
+                deviceSelect.disabled = false;
+                const devices = Object.keys(productsDatabase[selectedBrand][selectedCategory]).sort();
+                devices.forEach(device => {
+                    const option = document.createElement('option');
+                    option.value = device;
+                    option.textContent = device;
+                    deviceSelect.appendChild(option);
+                });
+            } else {
+                deviceSelect.disabled = true;
+            }
+        }
+
+        function updateVariantCode(productId) {
+            const variantSelect = document.getElementById(`variant_${productId}`);
+            const codeInput = document.querySelector(`[name="productCode_${productId}"]`);
+            
+            const selectedVariantCode = variantSelect.value;
+            codeInput.value = selectedVariantCode;
+        }
+
+        function updateAccessories(productId) {
+            const brandSelect = document.getElementById(`brand_${productId}`);
+            const categorySelect = document.getElementById(`category_${productId}`);
+            const deviceSelect = document.getElementById(`device_${productId}`);
+            const variantContainer = document.getElementById(`variant_container_${productId}`);
+            const variantSelect = document.getElementById(`variant_${productId}`);
+            const codeInput = document.querySelector(`[name="productCode_${productId}"]`);
+            const specsContainer = document.getElementById(`specs_container_${productId}`);
+            const specsDiv = document.getElementById(`specs_${productId}`);
+            const optionsDiv = document.getElementById(`options_${productId}`);
+            const accessoriesDiv = document.getElementById(`accessories_${productId}`);
+            const batteriesDiv = document.getElementById(`batteries_${productId}`);
+            
+            const selectedBrand = brandSelect.value;
+            const selectedCategory = categorySelect.value;
+            const selectedDevice = deviceSelect.value;
+            
+            if (selectedBrand && selectedCategory && selectedDevice && 
+                productsDatabase[selectedBrand][selectedCategory][selectedDevice]) {
+                const deviceData = productsDatabase[selectedBrand][selectedCategory][selectedDevice];
+                
+                // SPRAWDŹ CZY URZĄDZENIE MA WARIANTY
+                if (deviceData.variants && deviceData.variants.length > 0) {
+                    // Pokaż dropdown wariantów
+                    variantContainer.style.display = 'block';
+                    variantSelect.innerHTML = '<option value="">-- Wybierz wariant --</option>';
+                    deviceData.variants.forEach(variant => {
+                        const option = document.createElement('option');
+                        option.value = variant.code;
+                        option.textContent = `${variant.name} (${variant.code})`;
+                        variantSelect.appendChild(option);
+                    });
+                    codeInput.value = ''; // Wyczyść kod - wybierz wariant
+                    variantSelect.required = true;
+                } else {
+                    // Ukryj dropdown wariantów
+                    variantContainer.style.display = 'none';
+                    variantSelect.required = false;
+                    // Ustaw kod bezpośrednio
+                    codeInput.value = deviceData.code;
+                }
+                
+                // WYŚWIETL DANE TECHNICZNE
+                if (deviceData.specs && Object.keys(deviceData.specs).length > 0) {
+                    let specsHTML = '<div style="display: grid; grid-template-columns: auto 1fr; gap: 8px;">';
+                    for (const [key, value] of Object.entries(deviceData.specs)) {
+                        specsHTML += `
+                            <div style="font-weight: 600; color: #2c3e50;">${key}:</div>
+                            <div style="color: #34495e;">${value}</div>
+                        `;
+                    }
+                    specsHTML += '</div>';
+                    specsDiv.innerHTML = specsHTML;
+                    specsContainer.style.display = 'block';
+                } else {
+                    specsContainer.style.display = 'none';
+                }
+                
+                // OPCJE FABRYCZNE
+                if (deviceData.options && deviceData.options.length > 0) {
+                    let optionsHTML = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+                    deviceData.options.forEach((option, index) => {
+                        const optionName = typeof option === 'object' ? option.name : option;
+                        const optionCode = typeof option === 'object' && option.code ? ` (${option.code})` : '';
+                        optionsHTML += `
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; transition: background 0.2s;" 
+                                   onmouseover="this.style.background='#fff'" 
+                                   onmouseout="this.style.background='transparent'">
+                                <input type="checkbox" 
+                                       name="option_${productId}_${index}" 
+                                       value="${optionName}${optionCode}"
+                                       style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-size: 14px;">${optionName}${optionCode}</span>
+                            </label>
+                        `;
+                    });
+                    optionsHTML += '</div>';
+                    optionsDiv.innerHTML = optionsHTML;
+                } else {
+                    optionsDiv.innerHTML = '<p style="color: #999; font-size: 13px;">Brak dostępnych opcji</p>';
+                }
+                
+                // AKCESORIA
+                if (deviceData.accessories && deviceData.accessories.length > 0) {
+                    let accessoriesHTML = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+                    deviceData.accessories.forEach((accessory, index) => {
+                        const accName = typeof accessory === 'object' ? accessory.name : accessory;
+                        const accCode = typeof accessory === 'object' && accessory.code ? ` (${accessory.code})` : '';
+                        accessoriesHTML += `
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; transition: background 0.2s;" 
+                                   onmouseover="this.style.background='#fff'" 
+                                   onmouseout="this.style.background='transparent'">
+                                <input type="checkbox" 
+                                       name="accessory_${productId}_${index}" 
+                                       value="${accName}${accCode}"
+                                       style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-size: 14px;">${accName}${accCode}</span>
+                            </label>
+                        `;
+                    });
+                    accessoriesHTML += '</div>';
+                    accessoriesDiv.innerHTML = accessoriesHTML;
+                } else {
+                    accessoriesDiv.innerHTML = '<p style="color: #999; font-size: 13px;">Brak dostępnych akcesoriów</p>';
+                }
+                
+                // BATERIE
+                if (deviceData.batteries && deviceData.batteries.length > 0) {
+                    let batteriesHTML = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+                    deviceData.batteries.forEach((battery, index) => {
+                        const batName = typeof battery === 'object' ? battery.name : battery;
+                        const batCode = typeof battery === 'object' && battery.code ? ` (${battery.code})` : '';
+                        batteriesHTML += `
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; transition: background 0.2s;" 
+                                   onmouseover="this.style.background='#fff'" 
+                                   onmouseout="this.style.background='transparent'">
+                                <input type="checkbox" 
+                                       name="battery_${productId}_${index}" 
+                                       value="${batName}${batCode}"
+                                       style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-size: 14px;">${batName}${batCode}</span>
+                            </label>
+                        `;
+                    });
+                    batteriesHTML += '</div>';
+                    batteriesDiv.innerHTML = batteriesHTML;
+                } else {
+                    batteriesDiv.innerHTML = '<p style="color: #999; font-size: 13px;">Brak dostępnych baterii</p>';
+                }
+            }
+        }
+
+        function removeProduct(id) {
+            const product = document.getElementById(`product-${id}`);
+            if (product) {
+                product.remove();
+            }
+        }
+
+        function generatePDF(event) {
+            event.preventDefault();
+            
+            try {
+                // Zbierz dane z formularza
+                const clientName = document.getElementById('clientName').value || 'Nie podano';
+                const clientNIP = document.getElementById('clientNIP').value || '';
+                const clientAddress = document.getElementById('clientAddress').value || '';
+                const clientPostalCode = document.getElementById('clientPostalCode').value || '';
+                const clientCity = document.getElementById('clientCity').value || '';
+                const clientContact = document.getElementById('clientContact').value;
+                const clientEmail = document.getElementById('clientEmail').value;
+                const clientPhone = document.getElementById('clientPhone').value;
+                const salesName = document.getElementById('salesName').value;
+                
+                // Opcje finansowania
+                const paymentProforma = document.getElementById('paymentProforma').checked;
+                const paymentCash = document.getElementById('paymentCash').checked;
+                const paymentTerm = document.getElementById('paymentTerm').checked;
+                const paymentTermDays = document.getElementById('paymentTermDays').value;
+                const leasing = document.getElementById('leasing').checked;
+                const loan = document.getElementById('loan').checked;
+                
+                // Zbierz produkty
+                let productsHTML = '';
+                const productContainers = document.querySelectorAll('.product-item');
+                
+                if (productContainers.length === 0) {
+                    productsHTML = '<p>Brak produktów</p>';
+                } else {
+                    productContainers.forEach((container, index) => {
+                        const brand = container.querySelector('[id^="brand_"]')?.value || '';
+                        const category = container.querySelector('[id^="category_"]')?.value || '';
+                        const device = container.querySelector('[id^="device_"]')?.value || '';
+                        const variantSelect = container.querySelector('[id^="variant_"]');
+                        const variant = variantSelect && variantSelect.style.display !== 'none' ? variantSelect.value : '';
+                        const code = container.querySelector('[id^="code_"]')?.value || '';
+                        const quantity = container.querySelector('[id^="quantity_"]')?.value || '1';
+                        const discount = container.querySelector('[id^="discount_"]')?.value || '0';
+                        
+                        productsHTML += `<div style="margin-bottom: 15px; page-break-inside: avoid;">`;
+                        productsHTML += `<h4>${index + 1}. ${brand} - ${category} - ${device}</h4>`;
+                        if (variant) productsHTML += `<p style="margin: 5px 0;"><strong>Wariant:</strong> ${variant}</p>`;
+                        productsHTML += `<p style="margin: 5px 0;"><strong>Kod:</strong> ${code}</p>`;
+                        if (quantity !== '1' || discount !== '0') {
+                            productsHTML += `<p style="margin: 5px 0;"><strong>Ilość:</strong> ${quantity} | <strong>Rabat:</strong> ${discount}%</p>`;
+                        }
+                        
+                        // Opcje
+                        const selectedOptions = [];
+                        container.querySelectorAll('[id^="options_"] input[type="checkbox"]:checked').forEach(cb => {
+                            selectedOptions.push(cb.parentElement.textContent.trim());
+                        });
+                        if (selectedOptions.length > 0) {
+                            productsHTML += `<p style="margin: 5px 0;"><strong>Opcje:</strong> ${selectedOptions.join(', ')}</p>`;
+                        }
+                        
+                        // Akcesoria
+                        const selectedAccessories = [];
+                        container.querySelectorAll('[id^="accessories_"] input[type="checkbox"]:checked').forEach(cb => {
+                            selectedAccessories.push(cb.parentElement.textContent.trim());
+                        });
+                        if (selectedAccessories.length > 0) {
+                            productsHTML += `<p style="margin: 5px 0;"><strong>Akcesoria:</strong> ${selectedAccessories.join(', ')}</p>`;
+                        }
+                        
+                        // Baterie
+                        const selectedBatteries = [];
+                        container.querySelectorAll('[id^="batteries_"] input[type="checkbox"]:checked').forEach(cb => {
+                            selectedBatteries.push(cb.parentElement.textContent.trim());
+                        });
+                        if (selectedBatteries.length > 0) {
+                            productsHTML += `<p style="margin: 5px 0;"><strong>Baterie:</strong> ${selectedBatteries.join(', ')}</p>`;
+                        }
+                        
+                        // Dodatkowe uwagi do produktu
+                        const productNotes = container.querySelector('[id^="productNotes_"]')?.value;
+                        if (productNotes) {
+                            productsHTML += `<p style="margin: 5px 0; font-style: italic;"><strong>Uwagi:</strong> ${productNotes}</p>`;
+                        }
+                        
+                        productsHTML += `</div>`;
+                    });
+                }
+                
+                // Zbierz informacje dodatkowe
+                const deliveryTime = document.getElementById('deliveryTime').value;
+                const financing = document.getElementById('financing').value;
+                const additionalNotes = document.getElementById('additionalNotes').value;
+                const validityPeriod = document.getElementById('validityPeriod').value;
+                
+                let additionalInfoHTML = '';
+                if (deliveryTime) additionalInfoHTML += `<p><strong>Termin dostawy:</strong> do ${deliveryTime} dni roboczych</p>`;
+                
+                // Opcje finansowania
+                let paymentOptionsHTML = '';
+                if (paymentProforma) paymentOptionsHTML += '<p>✓ Płatność proforma</p>';
+                if (paymentCash) paymentOptionsHTML += '<p>✓ Płatność gotówka</p>';
+                if (paymentTerm) paymentOptionsHTML += `<p>✓ Płatność na termin (${paymentTermDays} dni)</p>`;
+                if (leasing) paymentOptionsHTML += '<p>✓ Przygotować ofertę leasingu</p>';
+                if (loan) paymentOptionsHTML += '<p>✓ Przygotować ofertę pożyczki</p>';
+                
+                if (paymentOptionsHTML) {
+                    additionalInfoHTML += '<p><strong>Opcje finansowania:</strong></p>' + paymentOptionsHTML;
+                }
+                
+                if (financing) additionalInfoHTML += `<p><strong>Dodatkowe informacje o finansowaniu:</strong> ${financing}</p>`;
+                if (additionalNotes) additionalInfoHTML += `<p><strong>Uwagi:</strong> ${additionalNotes}</p>`;
+                if (validityPeriod) additionalInfoHTML += `<p><strong>Ważność oferty:</strong> ${validityPeriod} dni</p>`;
+                
+                // Utwórz HTML do druku
+                const printWindow = window.open('', '_blank');
+                
+                if (!printWindow) {
+                    alert('Zablokowano wyskakujące okno! Zezwól na wyskakujące okna dla tej strony i spróbuj ponownie.');
+                    return;
+                }
+                
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Oferta ${clientContact || clientName}</title>
+                        <style>
+                            @media print {
+                                @page { margin: 2cm; }
+                                body { margin: 0; }
+                            }
+                            body {
+                                font-family: Arial, sans-serif;
+                                line-height: 1.6;
+                                color: #333;
+                                max-width: 800px;
+                                margin: 0 auto;
+                                padding: 20px;
+                            }
+                            h1 { color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+                            h2 { color: #2c3e50; margin-top: 25px; border-bottom: 2px solid #ecf0f1; padding-bottom: 5px; }
+                            h3 { color: #34495e; margin-top: 20px; }
+                            h4 { color: #2980b9; margin: 10px 0 5px 0; }
+                            p { margin: 8px 0; }
+                            .section { margin-bottom: 25px; page-break-inside: avoid; }
+                            .date { text-align: right; color: #7f8c8d; margin-bottom: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>FORMULARZ OFERTOWY</h1>
+                        <div class="date">Data: ${new Date().toLocaleDateString('pl-PL')}</div>
+                        
+                        <div class="section">
+                            <h2>DANE KLIENTA</h2>
+                            <p><strong>Nazwa firmy:</strong> ${clientName}</p>
+                            ${clientNIP ? `<p><strong>NIP:</strong> ${clientNIP}</p>` : ''}
+                            ${clientAddress ? `<p><strong>Adres:</strong> ${clientAddress}</p>` : ''}
+                            ${clientPostalCode || clientCity ? `<p><strong>Kod pocztowy i miasto:</strong> ${clientPostalCode} ${clientCity}</p>` : ''}
+                            <p><strong>Osoba kontaktowa:</strong> ${clientContact}</p>
+                            <p><strong>Email:</strong> ${clientEmail}</p>
+                            <p><strong>Telefon:</strong> ${clientPhone}</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h2>HANDLOWIEC</h2>
+                            <p>${salesName}</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h2>PRODUKTY</h2>
+                            ${productsHTML}
+                        </div>
+                        
+                        <div class="section">
+                            <h2>INFORMACJE DODATKOWE</h2>
+                            ${additionalInfoHTML || '<p>Brak dodatkowych informacji</p>'}
+                        </div>
+                    </body>
+                    </html>
+                `);
+                
+                printWindow.document.close();
+                
+                // Czekaj na załadowanie i uruchom drukowanie
+                printWindow.onload = function() {
+                    printWindow.focus();
+                    printWindow.print();
+                };
+                
+                // Pokaż komunikat
+                const successMsg = document.getElementById('successMessage');
+                successMsg.textContent = '✅ Otwarto podgląd wydruku - zapisz jako PDF!';
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 5000);
+                
+            } catch (error) {
+                console.error('Błąd generowania PDF:', error);
+                alert('Wystąpił błąd: ' + error.message);
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+                document.getElementById('offerForm').reset();
+                document.getElementById('productsContainer').innerHTML = '';
+                productCounter = 0;
+                addProduct();
+            }
+        }
+
+        function generateJSON() {
+            // Walidacja wymaganych pól
+            const clientContact = document.getElementById('clientContact').value;
+            const clientEmail = document.getElementById('clientEmail').value;
+            const clientPhone = document.getElementById('clientPhone').value;
+            const salesName = document.getElementById('salesName').value;
+            
+            if (!clientContact || !clientEmail || !clientPhone || !salesName) {
+                alert('Wypełnij wymagane pola: Osoba kontaktowa, Email, Telefon, Imię handlowca');
+                return;
+            }
+            
+            // Sprawdź czy produkty mają wybrane marki/kategorie/urządzenia
+            const productItems = document.querySelectorAll('.product-item');
+            let productsValid = true;
+            productItems.forEach((item) => {
+                const id = item.id.split('-')[1];
+                const brand = document.querySelector(`[name="productBrand_${id}"]`).value;
+                const category = document.querySelector(`[name="productCategory_${id}"]`).value;
+                const device = document.querySelector(`[name="productName_${id}"]`).value;
+                
+                if (!brand || !category || !device) {
+                    productsValid = false;
+                }
+                
+                // Sprawdź wariant jeśli jest wymagany
+                const variantContainer = document.getElementById(`variant_container_${id}`);
+                const variantSelect = document.getElementById(`variant_${id}`);
+                if (variantContainer && variantContainer.style.display !== 'none' && !variantSelect.value) {
+                    productsValid = false;
+                }
+            });
+            
+            if (!productsValid) {
+                alert('Wypełnij wszystkie wymagane pola produktów (Marka, Kategoria, Urządzenie, Wariant)');
+                return;
+            }
+            
+            // Zbierz dane z formularza
+            const formData = {
+                metadata: {
+                    generatedDate: new Date().toISOString(),
+                    formVersion: "2.0"
+                },
+                client: {
+                    name: document.getElementById('clientName').value,
+                    nip: document.getElementById('clientNIP').value,
+                    address: document.getElementById('clientAddress').value,
+                    postalCode: document.getElementById('clientPostalCode').value,
+                    city: document.getElementById('clientCity').value,
+                    contactPerson: document.getElementById('clientContact').value,
+                    email: document.getElementById('clientEmail').value,
+                    phone: document.getElementById('clientPhone').value
+                },
+                salesperson: {
+                    firstName: document.getElementById('salesName').value
+                },
+                products: [],
+                additionalInfo: {
+                    deliveryTime: document.getElementById('deliveryTime').value ? 'do ' + document.getElementById('deliveryTime').value + ' dni roboczych' : '',
+                    financing: document.getElementById('financing').value,
+                    paymentOptions: {
+                        proforma: document.getElementById('paymentProforma').checked,
+                        cash: document.getElementById('paymentCash').checked,
+                        term: document.getElementById('paymentTerm').checked,
+                        termDays: document.getElementById('paymentTerm').checked ? document.getElementById('paymentTermDays').value : null,
+                        leasing: document.getElementById('leasing').checked,
+                        loan: document.getElementById('loan').checked
+                    },
+                    additionalNotes: document.getElementById('additionalNotes').value,
+                    validityPeriod: document.getElementById('validityPeriod').value ? document.getElementById('validityPeriod').value + ' dni' : ''
+                }
+            };
+
+            // Zbierz produkty (używamy istniejącej zmiennej productItems)
+            productItems.forEach((item, index) => {
+                const id = item.id.split('-')[1];
+                
+                // Zbierz zaznaczone opcje fabryczne
+                const optionsCheckboxes = item.querySelectorAll(`[name^="option_${id}_"]`);
+                const selectedOptions = [];
+                optionsCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedOptions.push(checkbox.value);
+                    }
+                });
+                
+                // Zbierz zaznaczone akcesoria
+                const accessoriesCheckboxes = item.querySelectorAll(`[name^="accessory_${id}_"]`);
+                const selectedAccessories = [];
+                accessoriesCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedAccessories.push(checkbox.value);
+                    }
+                });
+                
+                // Zbierz zaznaczone baterie
+                const batteriesCheckboxes = item.querySelectorAll(`[name^="battery_${id}_"]`);
+                const selectedBatteries = [];
+                batteriesCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedBatteries.push(checkbox.value);
+                    }
+                });
+                
+                const product = {
+                    brand: document.querySelector(`[name="productBrand_${id}"]`).value,
+                    category: document.querySelector(`[name="productCategory_${id}"]`).value,
+                    name: document.querySelector(`[name="productName_${id}"]`).value,
+                    variant: document.querySelector(`[name="productVariant_${id}"]`) ? 
+                             document.querySelector(`[name="productVariant_${id}"]`).options[document.querySelector(`[name="productVariant_${id}"]`).selectedIndex]?.text || '' : '',
+                    code: document.querySelector(`[name="productCode_${id}"]`).value,
+                    quantity: document.querySelector(`[name="productQuantity_${id}"]`).value,
+                    discount: document.querySelector(`[name="productDiscount_${id}"]`).value,
+                    options: selectedOptions,
+                    accessories: selectedAccessories,
+                    batteries: selectedBatteries,
+                    notes: document.querySelector(`[name="productNotes_${id}"]`).value
+                };
+                formData.products.push(product);
+            });
+
+            // Utwórz nazwę pliku z datą i nazwą klienta/osoby kontaktowej
+            const clientIdentifier = formData.client.contactPerson || formData.client.name || 'klient';
+            const clientNameClean = clientIdentifier.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            const dateStr = new Date().toISOString().split('T')[0];
+            const filename = `oferta_${clientNameClean}_${dateStr}.json`;
+
+            // Pobierz plik JSON
+            const dataStr = JSON.stringify(formData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            // Pokaż komunikat sukcesu
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
